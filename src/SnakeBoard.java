@@ -49,8 +49,8 @@ public class SnakeBoard extends JPanel {
     public void checkColision(int x1, int y1) {
         if (x1 >= SIZE || x1 < 0 || y1 >= SIZE || y1 < 0)
             snakeIsAlive = false;
-        for(int i = 1 ; i < bodyParts ; i++){
-            if(x1 == x[i] && y1 == y[i]){
+        for (int i = 1; i < bodyParts; i++) {
+            if (x1 == x[i] && y1 == y[i]) {
                 snakeIsAlive = false;
                 break;
             }
@@ -84,20 +84,26 @@ public class SnakeBoard extends JPanel {
         // OBJETOS
         g.setColor(new Color(255, 0, 0));
         g.fillOval(xApple * BLOCK, yApple * BLOCK, BLOCK, BLOCK);
+        g.setColor(new Color(0, 0, 0));
+        g.drawOval(xApple * BLOCK, yApple * BLOCK, BLOCK, BLOCK);
 
-        g.setColor(new Color(0, 150, 0));
         for (int i = 0; i < bodyParts; i++) {
-            if (i == 1)
-                g.setColor(new Color(0, 255, 0));
+            g.setColor(new Color(0, 255, 0));
+            if (i == 0)
+                g.setColor(new Color(0, 150, 0));
             g.fillRect(x[i] * BLOCK, y[i] * BLOCK, BLOCK, BLOCK);
+            g.setColor(new Color(0, 0, 0));
+            g.drawRect(x[i] * BLOCK, y[i] * BLOCK, BLOCK, BLOCK);
         }
 
-        // MALHA QUADRICULADA
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                g.setColor(new Color(0, 0, 0));
-                g.drawRect(i * BLOCK, j * BLOCK, BLOCK, BLOCK);
-            }
-        }
+        g.setColor(new Color(255, 0, 0));
+        g.setFont(new Font("Ink Tree", Font.BOLD, 20));
+        FontMetrics metrics = getFontMetrics(g.getFont());
+
+        g.drawString("Score: " + bodyParts, (DIMENSION / 2 - metrics.stringWidth("Score: " + bodyParts) / 2),
+                g.getFont().getSize());
+        if (!snakeIsAlive)
+            g.drawString("Game Over!", (DIMENSION / 2 - metrics.stringWidth("Game Over!") / 2),
+                    DIMENSION / 2 - g.getFont().getSize() / 2);
     }
 }
