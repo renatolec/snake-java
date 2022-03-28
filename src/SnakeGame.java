@@ -21,20 +21,24 @@ public class SnakeGame extends JFrame {
         addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_UP) {
-                    direction = 'W';
+                    if (direction != 'S')
+                        direction = 'W';
                 } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    direction = 'D';
+                    if (direction != 'A')
+                        direction = 'D';
                 } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                    direction = 'S';
+                    if (direction != 'W')
+                        direction = 'S';
                 } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                    direction = 'A';
+                    if (direction != 'D')
+                        direction = 'A';
                 }
             }
         });
 
         new Thread(new Runnable() {
             public void run() {
-                while (true) {
+                while (board.snakeIsAlive) {
                     board.repaint();
                     board.genApple();
                     board.movementSnake(direction);
