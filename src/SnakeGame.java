@@ -2,14 +2,14 @@ import javax.swing.JFrame;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyAdapter;
 
-public class Snake extends JFrame {
+public class SnakeGame extends JFrame {
 
-    Board board;
-    int movex = 0, movey = 0;
+    SnakeBoard board;
+    int direction;
 
-    Snake() {
+    SnakeGame() {
         super("Snake - Arcade Game");
-        board = new Board();
+        board = new SnakeBoard();
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
@@ -21,17 +21,13 @@ public class Snake extends JFrame {
         addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_UP) {
-                    movex = 0;
-                    movey = -1;
+                    direction = 'W';
                 } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    movex = 1;
-                    movey = 0;
+                    direction = 'D';
                 } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                    movex = 0;
-                    movey = 1;
+                    direction = 'S';
                 } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                    movex = -1;
-                    movey = 0;
+                    direction = 'A';
                 }
             }
         });
@@ -40,7 +36,8 @@ public class Snake extends JFrame {
             public void run() {
                 while (true) {
                     board.repaint();
-                    board.move(movex, movey);
+                    board.genApple();
+                    board.movementSnake(direction);
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException ie) {
@@ -52,6 +49,6 @@ public class Snake extends JFrame {
     }
 
     public static void main(String[] args) throws Exception {
-        new Snake();
+        new SnakeGame();
     }
 }
