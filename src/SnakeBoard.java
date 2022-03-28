@@ -1,6 +1,9 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+
 
 public class SnakeBoard extends JPanel {
 
@@ -10,82 +13,40 @@ public class SnakeBoard extends JPanel {
 
     int x[] = new int[SIZE * SIZE];
     int y[] = new int[SIZE * SIZE];
-    int xApple, yApple;
+    int xApple, yApple, randomFruit;
     int bodyParts = 1;
 
     boolean appleOnBoard = false, snakeIsAlive = true;
 
+    Image[] image = new Image[4];
+
     SnakeBoard() {
         setPreferredSize(new Dimension(DIMENSION, DIMENSION));
+        loadImages();
         x[0] = y[0] = 0;
     }
 
-    public void movementSnake(int direction) {
-
-        for (int i = bodyParts; i > 0; i--) {
-            x[i] = x[i - 1];
-            y[i] = y[i - 1];
+    public void loadImages(){
+        try {
+            image[0] = ImageIO.read(new File("../lib/carambola.png"));
+            image[1] = ImageIO.read(new File("../lib/banana.png"));
+            image[2] = ImageIO.read(new File("../lib/kiwi.png"));
+            image[3] = ImageIO.read(new File("../lib/pera.png"));
+        } catch (IOException ioe) {
+            
         }
-
-        switch (direction) {
-            case 'W':
-                y[0] = y[0] - 1;
-                break;
-            case 'A':
-                x[0] = x[0] - 1;
-                break;
-            case 'S':
-                y[0] = y[0] + 1;
-                break;
-            case 'D':
-                x[0] = x[0] + 1;
-                break;
-        }
-        checkColision(x[0], y[0]);
-        if (x[0] == xApple && y[0] == yApple)
-            eatApple();
-    }
-
-    public void checkColision(int x1, int y1) {
-        if (x1 >= SIZE || x1 < 0 || y1 >= SIZE || y1 < 0)
-            snakeIsAlive = false;
-        for (int i = 1; i < bodyParts; i++) {
-            if (x1 == x[i] && y1 == y[i]) {
-                snakeIsAlive = false;
-                break;
-            }
-        }
-    }
-
-    public void genApple() {
-        if (appleOnBoard)
-            return;
-        Random gen = new Random();
-        xApple = gen.nextInt(SIZE);
-        yApple = gen.nextInt(SIZE);
-        appleOnBoard = true;
-    }
-
-    public void eatApple() {
-        appleOnBoard = false;
-        bodyParts++;
     }
 
     @Override
     public void paintComponent(Graphics g) {
-        // PLANO DE FUNDO
+
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 g.setColor(new Color(255, 255, 255));
                 g.fillRect(i * BLOCK, j * BLOCK, BLOCK, BLOCK);
             }
         }
-
-        // OBJETOS
-        g.setColor(new Color(255, 0, 0));
-        g.fillOval(xApple * BLOCK, yApple * BLOCK, BLOCK, BLOCK);
-        g.setColor(new Color(0, 0, 0));
-        g.drawOval(xApple * BLOCK, yApple * BLOCK, BLOCK, BLOCK);
+        g.drawImage(image[randomFruit], xApple*BLOCK, yApple*BLOCK, BLOCK, BLOCK, this);
 
         for (int i = 0; i < bodyParts; i++) {
             g.setColor(new Color(0, 255, 0));
@@ -99,7 +60,6 @@ public class SnakeBoard extends JPanel {
         g.setColor(new Color(255, 0, 0));
         g.setFont(new Font("Ink Tree", Font.BOLD, 20));
         FontMetrics metrics = getFontMetrics(g.getFont());
-
         g.drawString("Score: " + bodyParts, (DIMENSION / 2 - metrics.stringWidth("Score: " + bodyParts) / 2),
                 g.getFont().getSize());
         if (!snakeIsAlive)

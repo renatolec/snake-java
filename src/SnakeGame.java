@@ -4,18 +4,18 @@ import java.awt.event.KeyAdapter;
 
 public class SnakeGame extends JFrame {
 
-    SnakeBoard board;
+    SnakeLogic game;
     int direction;
 
     SnakeGame() {
         super("Snake - Arcade Game");
-        board = new SnakeBoard();
+        game = new SnakeLogic();
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setVisible(true);
 
-        add(board);
+        add(game.board);
         pack();
 
         addKeyListener(new KeyAdapter() {
@@ -38,10 +38,10 @@ public class SnakeGame extends JFrame {
 
         new Thread(new Runnable() {
             public void run() {
-                while (board.snakeIsAlive) {
-                    board.repaint();
-                    board.genApple();
-                    board.movementSnake(direction);
+                while (game.board.snakeIsAlive) {
+                    game.board.repaint();
+                    game.genApple();
+                    game.movementSnake(direction);
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException ie) {
